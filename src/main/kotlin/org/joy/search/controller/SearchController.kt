@@ -18,7 +18,6 @@ class SearchController {
     fun search(@RequestParam("search") search: String): ResponseEntity<List<StockModel>> {
         if(search.isEmpty()) return ResponseEntity.ok(listOf())
         if (stocks.isEmpty()) {
-
             stocks = File("종목.txt")
                 .readLines().map {
                     val strings = it.split("\t")
