@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>헬로</title>
+</head>
+<body>
+
+무언가를 입력<label for="search-input"></label><input type="text" id="search-input">
+자동완성 목록
+<ol id="result">
+    <li>결과</li>
+</ol>
+
+<script>
+    const inputTxt = document.getElementById('search-input');
+    const resultOl = document.getElementById('result');
+    inputTxt.addEventListener('input', e => {
+        console.log('검색어:'+inputTxt.value)
+        fetch('/stock?search=' + inputTxt.value)
+            .then(res => res.json())
+            .then(json => {
+                if (json.length === 0) {
+                    resultOl.innerHTML = `<li>그런거 없음</li>`
+                } else {
+                    console.log(json)
+                    resultOl.innerHTML = ''
+                    json.forEach(model => {
+                        resultOl.innerHTML+=`<li>${model.name}</li>`
+                    })
+                }
+            })
+    })
+</script>
+</body>
+</html>
