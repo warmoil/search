@@ -10,7 +10,7 @@ fun main() {
         val file = File("종목.txt")
         stocks = file.readLines().map {
             val strings = it.split("\t")
-            StockModel(strings[0].toLong(),strings[1],strings[2])
+            StockModel(strings[0],strings[1],strings[2])
         }.associateBy({ it.name }, { it })
     }
     stocks.entries

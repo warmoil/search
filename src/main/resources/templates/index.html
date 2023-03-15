@@ -6,7 +6,7 @@
 </head>
 <body>
 
-무언가를 입력<label for="search-input"></label><input type="text" id="search-input">
+무언가를 입력<label for="search-input"></label><input type="text" id="search-input"><br/>
 자동완성 목록
 <ol id="result">
     <li>결과</li>
@@ -26,7 +26,7 @@
                     console.log(json)
                     resultOl.innerHTML = ''
                     json.forEach(model => {
-                        resultOl.innerHTML+=`<li>${model.name}</li>`
+                        resultOl.innerHTML+=`<li>${model.no}:${model.name}</li>`
                     })
                 }
             })
