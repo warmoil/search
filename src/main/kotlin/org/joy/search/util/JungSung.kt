@@ -3,6 +3,7 @@ package org.joy.search.util
 
 // 가의 코드
 private const val CHO_START_CODE = 44032
+
 // 힣의 코드
 private const val CHO_LAST_CODE = 55203
 
@@ -26,4 +27,11 @@ fun haveJONG(c: Char): Boolean {
 // 모음의 index  ㅏ ㅐ ㅜ ㅑ 등...
 fun getIndexOfJung(c: Char): Int {
     return (c.code - CHO_START_CODE) / JUNG_TERM
+}
+
+// 모음을 리턴 ex) 각 -> 가
+fun getJungOrChar(c: Char): Char {
+    return if (umJulValid(c)) {
+        Char((c.code - CHO_START_CODE) / JUNG_TERM * JUNG_TERM + CHO_START_CODE)
+    } else c
 }
