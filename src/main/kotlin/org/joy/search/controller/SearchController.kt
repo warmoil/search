@@ -6,7 +6,6 @@ import org.joy.search.repository.StockRepository
 import org.joy.search.util.getChoOrChar
 import org.joy.search.util.getChoOrNull
 import org.joy.search.util.getJungOrChar
-import org.joy.search.util.hangulValid
 import org.joy.search.util.haveJONG
 import org.joy.search.util.isCho
 import org.joy.search.util.isSameChoAndJung
@@ -18,19 +17,21 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.io.File
 import java.time.LocalDateTime
-import java.util.UUID
 
 @RestController
 @RequestMapping("/stock")
-class SearchController(private val stockRepository: StockRepository) {
+class SearchController(
+    private val stockRepository: StockRepository
+) {
     var stocks: List<StockModel> = getStockList()
+    var entityList: List<StockEntity> = listOf()
     lateinit var lastUpdate: LocalDateTime
 
     @GetMapping("/2")
     fun search2(@RequestParam("search") search: String): ResponseEntity<List<StockEntity>> {
         val startTime = getNow()
         val stockList = stockRepository.findAllByNameContaining(search)
-        println("레디스 로드 시간:${startTime-getNow()}")
+        println("레디스 로드 시간:${startTime - getNow()} 갯수:${stockList.toList().size}")
         // 빈칸이면 빈값
         if (search.isEmpty()) return ResponseEntity.ok(listOf())
         // 한글자 일경우
@@ -84,7 +85,7 @@ class SearchController(private val stockRepository: StockRepository) {
         if (choNum >= 2) {
             println("걸린시간:" + (getNow() - startTime))
             return ResponseEntity.ok(
-                listOf(StockEntity("", "초성검색은 지원하지 않습니다.", "초성검색은 지원하지 않습니다.",""))
+                listOf(StockEntity(no = "초성검색은 지원하지 않습니다.", name = "초성검색은 지원하지 않습니다.", choSung = "", jungSung = ""))
             )
         }
         val beforeLastStr = search.substring(0, search.length - 1)
@@ -220,13 +221,12 @@ class SearchController(private val stockRepository: StockRepository) {
 
 
     fun getStockList(): List<StockModel> {
-        val list =  File("종목.txt")
+        val list = File("종목.txt")
             .readLines().map {
                 val strings = it.split("\t")
                 StockModel(strings[0], strings[1], String(strings[1].map { c -> getChoOrChar(c) }.toCharArray()))
             }
-        println("getStockList")
-        stockRepository.saveAll(
+        val entityList =
             list.map {
                 StockEntity(
                     no = it.no,
@@ -235,10 +235,16 @@ class SearchController(private val stockRepository: StockRepository) {
                     jungSung = it.name.map { c -> getJungOrChar(c) }.joinToString("")
                 )
             }
+        println("getStockList")
+        val now = getNow()
+        stockRepository.saveAll(
+            entityList
         )
-        println("after redis")
+        println("after redis 걸린시간${getNow()-now}")
         return list
     }
+
+
 
     fun getNow(): Long = System.currentTimeMillis()
 }

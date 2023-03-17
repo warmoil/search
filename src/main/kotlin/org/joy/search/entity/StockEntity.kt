@@ -1,13 +1,17 @@
 package org.joy.search.entity
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.redis.core.RedisHash
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
-@RedisHash(value = "stock")
+@Entity
 data class StockEntity(
     @Id
-    val no: String,
-    val name: String,
-    val choSung: String,
-    val jungSung: String
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val idx: Long = 0,
+    var no: String,
+    var name: String,
+    var choSung: String,
+    var jungSung: String
 )
