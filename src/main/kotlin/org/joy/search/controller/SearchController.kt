@@ -4,7 +4,7 @@ import org.joy.search.entity.StockEntity
 import org.joy.search.model.StockModel
 import org.joy.search.repository.StockRepository
 import org.joy.search.util.getChoOrChar
-import org.joy.search.util.getChoOrNull
+import org.joy.search.util.getChoOrNullByUmjul
 import org.joy.search.util.getJungOrChar
 import org.joy.search.util.haveJONG
 import org.joy.search.util.isCho
@@ -98,7 +98,7 @@ class SearchController(
             return ResponseEntity.ok(
                 filterShotAndNotStart
                     .filter {
-                        val nowCho = getChoOrNull(it.name[beforeLastStr.length])
+                        val nowCho = getChoOrNullByUmjul(it.name[beforeLastStr.length])
                         // 마지막 글자전 까지 같고 마지막 초성이 같아야함
                         nowCho == search.last()
                     }.take(20).toList()

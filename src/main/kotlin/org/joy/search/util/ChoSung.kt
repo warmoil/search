@@ -7,22 +7,34 @@ private val choList =
     listOf('ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ')
 
 
-fun getChoIndexOrNull(c: Char): Int? {
-    return if (hangulValid(c)) {
+// 음절에서 초성 index를 뽑습니다 . 초성이 올경우에는 null을 반환합니다.
+fun getChoIndexOrNullByUmjul(c: Char): Int? {
+    return if (umJulValid(c)) {
         getChoIndex(c)
     } else null
 }
-fun getChoOrNull(c: Char): Char? {
+
+// 음절에서 초성을 뽑습니다
+fun getChoOrNullByUmjul(c: Char): Char? {
     return if (umJulValid(c)) {
         choList[getChoIndex(c)]
     } else null
 }
 
-fun getChoIndex(c: Char): Int {
-    return ((c.code - CHO_START_CODE) / CHO_TERM)
+// 음절에서 초성을 가져옵니다 한글 음절이 아닐경우 원치않는 값이 나옵니다.
+private fun getChoIndex(c: Char): Int {
+    // 한글 아니면 -1
+    if (!hangulValid(c)) return -1
+
+    return if (isCho(c)) {
+        choList.indexOf(c)
+    } else {
+        ((c.code - CHO_START_CODE) / CHO_TERM)
+    }
+
 }
 
-// 한글 음절이면 초성으로 변경합니다
+// 한글 음절이면 초성으로 변경합니다 음절이아니면 그대로 반환합니다.
 fun getChoOrChar(c: Char): Char {
     return if (umJulValid(c)) {
         choList[getChoIndex(c)]
@@ -32,6 +44,12 @@ fun getChoOrChar(c: Char): Char {
 
 // 초성인지 확인합니다
 fun isCho(c: Char): Boolean {
+//    return c in 'ㄱ'..'ㅎ'
+    return c in choList
+}
+
+// 초성 또는 받침인지 범위를 검색합니다.
+fun isChoOrJong(c: Char): Boolean {
     return c in 'ㄱ'..'ㅎ'
 }
 
@@ -42,13 +60,18 @@ fun umJulValid(c: Char): Boolean {
 
 // 한글인지 확인합니다
 fun hangulValid(c: Char): Boolean {
-    return isCho(c) || umJulValid(c)
+    return isChoOrJong(c) || umJulValid(c)
 }
 
+// 같은 초성인지 확인합니다.
 fun isSameCho(c1: Char, c2: Char): Boolean {
-    return getChoIndex(c1) == getChoIndex(c2)
+    return if (hangulValid(c1) && hangulValid(c2)) {
+        getChoIndex(c1) == getChoIndex(c2)
+    } else {
+        false
+    }
 }
 
 fun getChoSungList(): List<Char> {
-    return listOf('ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ')
+    return choList
 }

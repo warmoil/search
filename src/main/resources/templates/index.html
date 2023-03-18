@@ -7,16 +7,18 @@
 <body>
 
 무언가를 입력<label for="search-input"></label><input type="text" id="search-input"><br/>
-자동완성 목록
+자동완성 목록<br/>
+<div id="result-size"></div>
 <ol id="result">
     <li>결과</li>
 </ol>
 
 <script>
-    const inputTxt = document.getElementById('search-input');
-    const resultOl = document.getElementById('result');
+    const inputTxt = document.getElementById('search-input')
+    const resultOl = document.getElementById('result')
+    const resultSize = document.getElementById('result-size')
     inputTxt.addEventListener('input', e => {
-        console.log('검색어:'+inputTxt.value)
+        console.log('검색어:' + inputTxt.value)
         fetch('/stock/2?search=' + inputTxt.value)
             .then(res => res.json())
             .then(json => {
@@ -27,7 +29,7 @@
                     console.log(json)
                     resultOl.innerHTML = ''
                     json.forEach(model => {
-                        resultOl.innerHTML+=`<li>${model.no}:${model.name}</li>`
+                        resultOl.innerHTML += `<li>${model.no}:${model.name}</li>`
                     })
                 }
             })
