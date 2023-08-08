@@ -10,3 +10,6 @@
 2. run 
 
 3. localhost:8080 으로 들어간후 테스트 
+
+
+[만들게_된이유](https://warmoil.tistory.com/4)
